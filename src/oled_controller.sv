@@ -44,11 +44,11 @@ module oled_controller(
     state       state_b;
     state       state_r;
 
-    logic command_ready_b;
-    logic command_ready_r;
+    logic       command_ready_b;
+    logic       command_ready_r;
 
-    logic start_pwr_on_b;
-    logic pwr_on_done_b;
+    logic       start_pwr_on_b;
+    logic       pwr_on_done_b;
 
     oled_power_on #(200000000,1) oled_power_on_I (
         .rst_n(rst_n),
@@ -61,8 +61,32 @@ module oled_controller(
         .pmod_en(pmod_en)
     );
 
-    logic start_pwr_on_spi_b;
-    logic pwr_on_spi_done_b;
+    logic       start_pwr_on_spi_b;
+    logic       pwr_on_spi_done_b;
+
+    logic       commands_empty;
+    logic       commands_full;
+
+    logic       read_command_b;
+
+    logic [7:0] command_in_b;
+    logic       command_in_valid_b;
+
+    logic [7:0] command_out_b;
+    logic       command_out_valid_b;
+
+    oled_serial_buffer #(1024, 8) oled_serial_buffer_I (
+        .rst_n(rst_n),
+        .clk(sclk),
+        .command_in(command_in_b),
+        .command_in_valid(command_in_valid_b),
+        .read_command(read_command_b),
+        .command_out(command_out_b),
+        .commands_empty(commands_empty),
+        .commands_full(commands_full)
+    );
+
+    assign command_out_valid_b = !commands_empty && read_command_b;
 
     assign command_ready            = command_ready_r;
 
@@ -70,8 +94,9 @@ module oled_controller(
     begin
         state_b                     = state_r;
         command_ready_b             = command_ready_r;
-        start_pwr_on_b            = 0;
+        start_pwr_on_b              = 0;
         start_pwr_on_spi_b          = 0;
+        read_command_b              = 0;
         case (state_r)
             IDLE:
             begin
@@ -90,6 +115,7 @@ module oled_controller(
             POWER_ON_SPI:
             begin
                 start_pwr_on_spi_b  = 0;
+                read_command_b      = 1;
                 if (pwr_on_spi_done_b)
                 begin
                     state_b         = READY;

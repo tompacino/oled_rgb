@@ -5,3 +5,4 @@
 /bazel-oled_rgb
 # Ignore bazel built files
 /src/obj_dir
+# Ignore waveforms

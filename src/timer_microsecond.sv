@@ -3,9 +3,9 @@
 // Assert 'cycle' for one cycle every time a microsecond passes
 
 module timer_microsecond#(
-    parameter CLOCK_FREQUENCY_HZ=200000000,
-    localparam MATCH=CLOCK_FREQUENCY_HZ/1000000,
-    localparam CLOCK_COUNT_W    = $clog2(MATCH)
+    parameter CLOCK_FREQUENCY_HZ    = 200000000,
+    localparam MATCH                = CLOCK_FREQUENCY_HZ/1000000,
+    localparam CLOCK_COUNT_W        = $clog2(MATCH)
     )
     (
         input rst_n,    // active low rst_n

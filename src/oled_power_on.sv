@@ -3,11 +3,11 @@
 // Performs the OLED power on sequence for control signals
 
 module oled_power_on #(
-    parameter CLOCK_FREQUENCY_HZ=200000000,
-    parameter DEBUG=0, // changes all timers to 10 us
-    localparam CLOCK_COUNT_W=32,
-    localparam WAIT_POWER_STABLE_US=20000,
-    localparam WAIT_RESET_US=3
+    parameter CLOCK_FREQUENCY_HZ    = 200000000,
+    parameter DEBUG                 = 0, // changes all timers to 10 us
+    localparam CLOCK_COUNT_W        = 32,
+    localparam WAIT_POWER_STABLE_US = 20000,
+    localparam WAIT_RESET_US        = 3
     )
     (
         input wire          rst_n,                  // active low reset

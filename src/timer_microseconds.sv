@@ -1,8 +1,8 @@
 `timescale 1ns / 1ns
 
 module timer_microseconds #(
-    parameter CLOCK_FREQUENCY_HZ=200000000,
-    parameter CLOCK_COUNT_W=32
+    parameter CLOCK_FREQUENCY_HZ    = 200000000,
+    parameter CLOCK_COUNT_W         = 32
     )
     (
         input wire                      rst_n, // active low reset
