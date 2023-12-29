@@ -1,0 +1,84 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Dec 29 08:44:20 2023
+[*]
+[dumpfile] "/home/tpapacino/proj/fpga/oled_rgb/src/waveform.vcd"
+[dumpfile_mtime] "Fri Dec 29 08:41:27 2023"
+[dumpfile_size] 4963
+[savefile] "/home/tpapacino/proj/fpga/oled_rgb/src/oled_power_on.gtkw"
+[timestart] 0
+[size] 1908 1129
+[pos] 32767 32767
+*-4.930161 9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.oled_controller.
+[treeopen] TOP.oled_controller.oled_power_on_I.
+[treeopen] TOP.oled_controller.oled_power_on_I.timer_microseconds_I.
+[sst_width] 214
+[signals_width] 363
+[sst_expanded] 1
+[sst_vpaned_height] 337
+@200
+-
+@201
+-OLED_POWER_ON
+@28
+TOP.oled_controller.oled_power_on_I.cs
+TOP.oled_controller.oled_power_on_I.cs_b
+TOP.oled_controller.oled_power_on_I.cs_r
+TOP.oled_controller.oled_power_on_I.dc_c
+TOP.oled_controller.oled_power_on_I.dc_c_b
+TOP.oled_controller.oled_power_on_I.dc_c_r
+TOP.oled_controller.oled_power_on_I.done
+TOP.oled_controller.oled_power_on_I.done_b
+TOP.oled_controller.oled_power_on_I.done_r
+TOP.oled_controller.oled_power_on_I.mosi
+TOP.oled_controller.oled_power_on_I.mosi_b
+TOP.oled_controller.oled_power_on_I.mosi_r
+TOP.oled_controller.oled_power_on_I.pmod_en
+TOP.oled_controller.oled_power_on_I.pmod_en_b
+TOP.oled_controller.oled_power_on_I.pmod_en_r
+TOP.oled_controller.oled_power_on_I.res
+TOP.oled_controller.oled_power_on_I.res_b
+TOP.oled_controller.oled_power_on_I.res_r
+TOP.oled_controller.oled_power_on_I.sclk
+TOP.oled_controller.oled_power_on_I.start
+TOP.oled_controller.oled_power_on_I.start_r
+@22
+TOP.oled_controller.oled_power_on_I.state_b[31:0]
+TOP.oled_controller.oled_power_on_I.state_r[31:0]
+@28
+TOP.oled_controller.oled_power_on_I.timer_done
+@22
+TOP.oled_controller.oled_power_on_I.timer_match_b[31:0]
+@28
+TOP.oled_controller.oled_power_on_I.timer_update_match_b
+TOP.oled_controller.oled_power_on_I.vss_en
+TOP.oled_controller.oled_power_on_I.vss_en_b
+TOP.oled_controller.oled_power_on_I.vss_en_r
+@200
+-
+-TIMER_MICROSECONDS
+-
+@22
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.counter_b[31:0]
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.counter_r[31:0]
+@28
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.done
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.done_b
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.done_r
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.flag
+@22
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.match[31:0]
+@28
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.rst
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.update_match
+@200
+-
+-TIMER_MICROSECOND
+@22
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.timer_microsecond_I.counter_r[7:0]
+@28
+TOP.oled_controller.oled_power_on_I.timer_microseconds_I.timer_microsecond_I.flag
+[pattern_trace] 1
+[pattern_trace] 0
