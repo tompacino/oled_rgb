@@ -3,6 +3,11 @@
 # Ignore bazel
 /bazel-out
 /bazel-oled_rgb
+bazel-bin
+bazel-testlogs
+MODULE.bazel
+MODULE.bazel.lock
 # Ignore bazel built files
 /src/obj_dir
 # Ignore waveforms
+*.vcd

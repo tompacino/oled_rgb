@@ -1,5 +1,4 @@
 `timescale 1ns / 1ns
-
 /**
     - The display controller operates in SPI Mode 3 (clock idles on logic high, data is captured on the clock rising edge, and data is transferred on the clock falling edge) and with a minimum clock cycle time of 150 ns (as per table 21 of the SSD1331 datasheet). The embedded display only supports SPI write, so users will not be able to receive any information back from the display over SPI.
 
@@ -12,11 +11,11 @@ module oled_controller(
         input wire          rst_n,                   // active low reset
         input wire          sclk,                    // serial clock
 
-        // verilator lint_off UNUSED
+        /* verilator lint_off UNUSED */
 
-        input wire          command_valid,          // high when command_valid SPI command received
-        input wire [7:0]    command,                // SPI command sent
-        output wire         command_ready,          // assert high when command_ready for new SPI command
+        input wire          command_in_valid,       // high when command_valid SPI command received
+        input wire [7:0]    command_in,             // SPI command sent
+        output wire         command_in_ready,       // assert high when ready for new SPI comm
 
         /* verilator lint_off UNDRIVEN */
         output wire         cs,                     // chip select
@@ -28,7 +27,7 @@ module oled_controller(
         output wire         vss_en,                 // vcc enable
         output wire         pmod_en                 // vdd logic voltage control
 
-        // verilator lint_on UNUSED
+        /* verilator lint_on UNUSED */
     );
 
     typedef enum
@@ -37,18 +36,31 @@ module oled_controller(
         POWER_ON,
         POWER_ON_SPI,
         READY,
-        WAIT,
+        OUTPUT_COMMAND_SERIAL,
         POWER_OFF
     } state;
+
+    /* verilator lint_off UNUSED */
+    /* verilator lint_off PINCONNECTEMPTY */
 
     state       state_b;
     state       state_r;
 
-    logic       command_ready_b;
-    logic       command_ready_r;
-
     logic       start_pwr_on_b;
     logic       pwr_on_done_b;
+
+    logic       start_pwr_on_spi_b;
+    logic       pwr_on_spi_done_b;
+    logic [7:0] pwr_on_spi_command_out;
+
+    logic       read_command_b;
+    logic [7:0] command_out;
+    logic       command_out_valid_b;
+    logic       commands_empty;
+    logic       commands_full;
+
+    logic [7:0] mux_dout;
+    logic       mux_valid;
 
     oled_power_on #(200000000,1) oled_power_on_I (
         .rst_n(rst_n),
@@ -61,39 +73,54 @@ module oled_controller(
         .pmod_en(pmod_en)
     );
 
-    logic       start_pwr_on_spi_b;
-    logic       pwr_on_spi_done_b;
-
-    logic       commands_empty;
-    logic       commands_full;
-
-    logic       read_command_b;
-
-    logic [7:0] command_in_b;
-    logic       command_in_valid_b;
-
-    logic [7:0] command_out_b;
-    logic       command_out_valid_b;
-
-    oled_serial_buffer #(1024, 8) oled_serial_buffer_I (
+    oled_power_on_spi #(8, 64) oled_power_on_spi_I (
         .rst_n(rst_n),
         .clk(sclk),
-        .command_in(command_in_b),
-        .command_in_valid(command_in_valid_b),
-        .read_command(read_command_b),
-        .command_out(command_out_b),
+        .read_en(),
+        .data_out(pwr_on_spi_command_out),
+        .done(pwr_on_spi_done_b)
+    );
+
+    oled_command_buffer #(1024, 8) oled_command_buffer_I (
+        .rst_n(rst_n),
+        .clk(sclk),
+        .write_en(command_in_valid),
+        .write_command(command_in),
+        .read_en(read_command_b),
+        .read_command(command_out),
         .commands_empty(commands_empty),
         .commands_full(commands_full)
     );
 
-    assign command_out_valid_b = !commands_empty && read_command_b;
+    mux #(8, 2) mux_valid_I (
+        .sel(),
+        .din('{pwr_on_spi_command_out, command_out}),
+        .dout(mux_dout)
+    );
 
-    assign command_ready            = command_ready_r;
+    mux #(1, 2) mux_data_I (
+        .sel(),
+        .din(),
+        .dout(mux_valid)
+    );
+
+    oled_serial_driver #(8) oled_serial_driver_I (
+        .rst_n(rst_n),
+        .sclk(sclk),
+        .sdata(),
+        .sdata_valid(),
+        .ready(),
+        .mosi(mosi),
+        .cs(cs)
+    );
+
+    // Command buffer should accept new commands so long as it isn't full
+    assign command_in_ready            = !commands_full && (state_b == READY);
+    assign command_out_valid_b      = !commands_empty && read_command_b;
 
     always_comb
     begin
         state_b                     = state_r;
-        command_ready_b             = command_ready_r;
         start_pwr_on_b              = 0;
         start_pwr_on_spi_b          = 0;
         read_command_b              = 0;
@@ -119,18 +146,17 @@ module oled_controller(
                 if (pwr_on_spi_done_b)
                 begin
                     state_b         = READY;
-                    command_ready_b = 1;
                 end
             end
             READY:
             begin
-                if (command_valid)
+                if (command_in_valid)
                 begin
-                    state_b         = WAIT;
-                    command_ready_b = 0;
+                    state_b         = OUTPUT_COMMAND_SERIAL;
+                    read_command_b  = 0;
                 end
             end
-            WAIT:
+            OUTPUT_COMMAND_SERIAL:
                 state_b             = READY;
         endcase
     end
@@ -140,12 +166,10 @@ module oled_controller(
         if (!rst_n)
         begin
             state_r                 <= IDLE;
-            command_ready_r         <= 0;
         end
         else
         begin
             state_r                 <= state_b;
-            command_ready_r         <= command_ready_b;
         end
     end
 

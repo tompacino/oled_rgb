@@ -38,52 +38,6 @@ module fifo #(
         begin
             read_ptr            <= 0;
             write_ptr           <= 1;
-            // PRELOAD RAM WITH POWER ON COMMANDS
-            ram[0]              <= 8'hFD;
-            ram[1]              <= 8'h12;
-            ram[2]              <= 8'hAE;
-            ram[3]              <= 8'hA0;
-            ram[4]              <= 8'h72;
-            ram[5]              <= 8'hA1;
-            ram[6]              <= 8'h00;
-            ram[7]              <= 8'hA2;
-            ram[8]              <= 8'h00;
-            ram[9]              <= 8'hA4;
-            ram[10]             <= 8'hA8;
-            ram[11]             <= 8'h3F;
-            ram[12]             <= 8'hAD;
-            ram[13]             <= 8'h8E;
-            ram[14]             <= 8'hB0;
-            ram[15]             <= 8'h0B;
-            ram[16]             <= 8'hB1;
-            ram[17]             <= 8'h31;
-            ram[18]             <= 8'hB3;
-            ram[19]             <= 8'hF0;
-            ram[21]             <= 8'h8A;
-            ram[22]             <= 8'h64;
-            ram[23]             <= 8'h8B;
-            ram[24]             <= 8'h78;
-            ram[25]             <= 8'h8C;
-            ram[26]             <= 8'h64;
-            ram[27]             <= 8'hBB;
-            ram[28]             <= 8'h3A;
-            ram[29]             <= 8'hBE;
-            ram[31]             <= 8'h3E;
-            ram[32]             <= 8'h87;
-            ram[33]             <= 8'h06;
-            ram[34]             <= 8'h81;
-            ram[35]             <= 8'h91;
-            ram[36]             <= 8'h82;
-            ram[37]             <= 8'h50;
-            ram[38]             <= 8'h83;
-            ram[39]             <= 8'h7D;
-            ram[40]             <= 8'h2E;
-            ram[40]             <= 8'h25;
-            ram[40]             <= 8'h00;
-            ram[40]             <= 8'h00;
-            ram[40]             <= 8'h5F;
-            ram[40]             <= 8'h3F;
-            ram[40]             <= 8'hAF;
         end
         else
         begin

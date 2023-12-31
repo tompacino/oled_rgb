@@ -2,18 +2,18 @@
 
 // Discards commands if the buffer is full (violates handshake)
 
-module oled_serial_buffer #(
+module oled_command_buffer #(
     parameter BUFFER_MAX = 1024,        // maximum number of serial commands that can be buffered
     parameter COMMAND_W  = 8            // bit width of serial commands
     )
     (
         input wire                  rst_n,
         input wire                  clk,
-        input wire [COMMAND_W-1:0]  command_in,
-        input wire                  command_in_valid,
-        input wire                  read_command,
+        input wire                  write_en,
+        input wire [COMMAND_W-1:0]  write_command,
+        input wire                  read_en,
 
-        output wire [COMMAND_W-1:0] command_out,
+        output wire [COMMAND_W-1:0] read_command,
         output wire                 commands_empty,
         output wire                 commands_full
     );
@@ -27,17 +27,17 @@ module oled_serial_buffer #(
     assign commands_empty   = empty;
     assign commands_full    = full;
 
-    assign write_en_b       = command_in_valid && !full;
-    assign read_en_b        = read_command && !empty;
+    assign write_en_b       = write_en && !full;
+    assign read_en_b        = read_en && !empty;
 
     fifo #(COMMAND_W, BUFFER_MAX) fifo_I
     (
         .rst_n(rst_n),
         .clk(clk),
         .write_en(write_en_b),
-        .data_in(command_in),
+        .data_in(write_command),
         .read_en(read_en_b),
-        .data_out(command_out),
+        .data_out(read_command),
         .full(full),
         .empty(empty),
         /* verilator lint_off PINCONNECTEMPTY */
@@ -46,4 +46,4 @@ module oled_serial_buffer #(
         /* verilator lint_on PINCONNECTEMPTY */
     );
 
-endmodule : oled_serial_buffer
+endmodule : oled_command_buffer
